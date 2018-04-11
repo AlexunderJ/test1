@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
 
 const API = 'b2680d43ae8a0c7b35dab5ccf32e3bcd';
-const url = 'http://api.openweathermap.org/data/2.5/weather?q=London';
+// const url = 'http://api.openweathermap.org/data/2.5/weather?q=London&units=metric';
 
-
+class Miasto extends React.Component {
+  render() {
+    return (<p>{this.props.name}</p>);
+  }
+}
 
 class App extends Component {
   constructor(props) {
@@ -14,17 +17,24 @@ class App extends Component {
     this.state={
       count: 1,
       weather: null,
+      miasto: "Warszawa",
+      url : "http://api.openweathermap.org/data/2.5/weather?q=Warszawa&units=metric",
     }
   }
 
   componentDidMount() {
-    axios.get(url, {params: {APPID: API}}).then(resp => {
+    axios.get(this.state.url, {params: {APPID: API}}).then(resp => {
       this.setState({weather: resp.data});
     });
   }
 
   shouldComponentUpdate() {
     return this.state.count<10;
+    
+  }
+
+  componentWillReceiveProps(){
+    return 
   }
 
   incrementCount() {
@@ -34,7 +44,14 @@ class App extends Component {
 
   displayWeaterTemp() {
     const { weather } = this.state;
-    return (<p>Temperatura w {weather.name} to {weather.main.temp} [in retard unit]</p>);
+    return (<p>Temperatura w {weather.name} to {weather.main.temp} [Celcius]</p>);
+  }
+
+  zmianaLokacji(props) {
+    const nazwaMiasta = props;
+    this.setState({miasto: nazwaMiasta});
+    const adres = `http://api.openweathermap.org/data/2.5/weather?q=${nazwaMiasta}&units=metric`;
+    this.setState({url: adres});
   }
   
   render() { 
@@ -42,16 +59,20 @@ class App extends Component {
  
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+        <header>
+         
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1 >
+        <Miasto name={this.state.miasto} />
+        </h1>
         {!!weather ? this.displayWeaterTemp() : null}
         <div>{count}</div>
         <button onClick={() => this.incrementCount()}> TOUCH ME </button>
+        <button onClick={() => this.zmianaLokacji("London")}> Londyn </button>
+        <button onClick={() => this.zmianaLokacji("Warszawa")}> Warszawa </button>
+        
+        <h2> URL = {this.state.url} </h2>
+        {/* <h2> Temperatura w = {this.weather.main.temp} </h2> */}
       </div>
     );
   }
