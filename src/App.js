@@ -21,11 +21,13 @@ class App extends Component {
       url : "http://api.openweathermap.org/data/2.5/weather?q=Warszawa&units=metric",
     }
   }
-
-  componentDidMount() {
+  zapytanieOPogode(){
     axios.get(this.state.url, {params: {APPID: API}}).then(resp => {
       this.setState({weather: resp.data});
     });
+  }
+
+  componentDidMount() {
   }
 
   shouldComponentUpdate() {
@@ -52,6 +54,7 @@ class App extends Component {
     this.setState({miasto: nazwaMiasta});
     const adres = `http://api.openweathermap.org/data/2.5/weather?q=${nazwaMiasta}&units=metric`;
     this.setState({url: adres});
+    this.zapytanieOPogode();
   }
   
   render() { 
@@ -67,12 +70,12 @@ class App extends Component {
         </h1>
         {!!weather ? this.displayWeaterTemp() : null}
         <div>{count}</div>
-        <button onClick={() => this.incrementCount()}> TOUCH ME </button>
-        <button onClick={() => this.zmianaLokacji("London")}> Londyn </button>
+        <button onClick={() => this.incrementCount()}> TOUCH ME 1 </button>
+        <button onClick={() => this.zmianaLokacji("Arkhara")}> Londyn </button>
         <button onClick={() => this.zmianaLokacji("Warszawa")}> Warszawa </button>
         
         <h2> URL = {this.state.url} </h2>
-        {/* <h2> Temperatura w = {this.weather.main.temp} </h2> */}
+       
       </div>
     );
   }
