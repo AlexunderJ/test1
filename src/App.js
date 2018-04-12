@@ -5,11 +5,7 @@ import './App.css';
 const API = 'b2680d43ae8a0c7b35dab5ccf32e3bcd';
 // const url = 'http://api.openweathermap.org/data/2.5/weather?q=London&units=metric';
 
-class Miasto extends React.Component {
-  render() {
-    return (<p>{this.props.name}</p>);
-  }
-}
+const Miasto = (props) => (<p>{props.name}</p>);
 
 class App extends Component {
   constructor(props) {
@@ -30,11 +26,6 @@ class App extends Component {
 
   shouldComponentUpdate() {
     return this.state.count<10;
-    
-  }
-
-  componentWillReceiveProps(){
-    return 
   }
 
   incrementCount() {
@@ -47,10 +38,9 @@ class App extends Component {
     return (<p>Temperatura w {weather.name} to {weather.main.temp} [Celcius]</p>);
   }
 
-  zmianaLokacji(props) {
-    const nazwaMiasta = props;
-    this.setState({miasto: nazwaMiasta});
-    const adres = `http://api.openweathermap.org/data/2.5/weather?q=${nazwaMiasta}&units=metric`;
+  zmianaLokacji(city) {
+    this.setState({miasto: city});
+    const adres = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
     this.setState({url: adres});
   }
   
