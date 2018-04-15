@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { map, filter } from 'lodash';
 import './App.css';
+import cityList from './cityList';
 
 const API = 'b2680d43ae8a0c7b35dab5ccf32e3bcd';
-// const url = 'http://api.openweathermap.org/data/2.5/weather?q=London&units=metric';
 
 const Miasto = (props) => (<p>{props.name}</p>);
+
 
 class App extends Component {
   constructor(props) {
@@ -13,17 +15,25 @@ class App extends Component {
     this.state={
       count: 1,
       weather: null,
-      miasto: "Warszawa",
-      url : "http://api.openweathermap.org/data/2.5/weather?q=Warszawa&units=metric",
+      city: "Warszawa",
+      list: this.prepareCities(cityList),
     }
   }
-  zapytanieOPogode(){
-    axios.get(this.state.url, {params: {APPID: API}}).then(resp => {
-      this.setState({weather: resp.data});
+
+  prepareCities(list) {
+    return map(list, city => ({ id: city.id, name: city.name }));
+  }
+
+  zapytanieOPogode(city){
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
+    axios.get(url, {params: { APPID: API }}).then(resp => {
+      this.setState({ weather: resp.data });
     });
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps, prevState) {
+    const { city } = this.state;
+    if (prevState.city !== city) this.zapytanieOPogode(city);
   }
 
   shouldComponentUpdate() {
@@ -41,31 +51,38 @@ class App extends Component {
   }
 
   zmianaLokacji(city) {
-    this.setState({miasto: city});
-    const adres = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
-    this.setState({url: adres});
-    this.zapytanieOPogode();
+    this.setState({ city });
+  }
+
+  onChangeCity(inputedCity) {
+    this.setState ({inputedCity});
+  }
+
+  filteredCity(val, list) {
+    console.log(val);
+    return filter(map(list, ({ name }) => name), n => n.indexOf(val) > -1);
   }
   
   render() { 
-    const { count, weather } = this.state;
- 
+    const { count, weather, city, inputedCity, list } = this.state;
     return (
       <div className="App">
         <header>
-         
+        
         </header>
         <h1 >
-        <Miasto name={this.state.miasto} />
+        <Miasto name={city} />
         </h1>
         {!!weather ? this.displayWeaterTemp() : null}
         <div>{count}</div>
         <button onClick={() => this.incrementCount()}> TOUCH ME 1 </button>
-        <button onClick={() => this.zmianaLokacji("Arkhara")}> Londyn </button>
+        <button onClick={() => this.zmianaLokacji("London")}> Londyn </button>
         <button onClick={() => this.zmianaLokacji("Warszawa")}> Warszawa </button>
+        <span> wybierz miasto </span>
+        <input value={ inputedCity || '' } onChange={(e) => this.onChangeCity(e.target.value)} />
+        <br />
+        <div> {this.filteredCity(inputedCity, list)} </div>
         
-        <h2> URL = {this.state.url} </h2>
-       
       </div>
     );
   }
