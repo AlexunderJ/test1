@@ -16,6 +16,7 @@ class App extends Component {
       count: 1,
       weather: null,
       city: "Warszawa",
+      imputedCity: '',
       list: this.prepareCities(cityList),
     }
   }
@@ -71,7 +72,7 @@ class App extends Component {
         
         </header>
         <h1 >
-        <Miasto name={city} />
+        <Miasto name={this.state.inputedCity} />
         </h1>
         {!!weather ? this.displayWeaterTemp() : null}
         <div>{count}</div>
@@ -82,6 +83,9 @@ class App extends Component {
         <input value={ inputedCity || '' } onChange={(e) => this.onChangeCity(e.target.value)} />
         <br />
         <div> {this.filteredCity(inputedCity, list)} </div>
+        <button onClick={() => this.zmianaLokacji({inputedCity})}> sukaj:{this.state.inputedCity} </button>
+        
+        <button onClick={() => this.zapytanieOPogode({inputedCity})}> ZAPYTANIE O:{this.state.inputedCity} </button>
         
       </div>
     );
