@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import cx from 'classnames';
 import { map, filter } from 'lodash';
 import './App.css';
 import cityList from './cityList';
@@ -59,20 +60,33 @@ class App extends Component {
     this.setState ({inputedCity});
   }
 
-  filteredCity(val, list) {
-    console.log(val);
-    return filter(map(list, ({ name }) => name), n => n.indexOf(val) > -1);
+  cityItemWrapper(cityArray = []) {
+    return map(cityArray, city => (
+      <div
+        className='city-item'
+        onClick={() => this.zapytanieOPogode(city)}
+      >
+        {city}
+      </div>
+    ));
   }
-  
+
+  filteredCity(val, list) {
+    return this.cityItemWrapper(filter(map(list, ({ name }) => name), n => n.indexOf(val) > -1));
+  }
+
   render() { 
     const { count, weather, city, inputedCity, list } = this.state;
+
+    const filteredList = this.filteredCity(inputedCity, list);
+    const cityClass = cx('city-search-results', { empty: filteredList.length === 0 });
     return (
       <div className="App">
         <header>
         
         </header>
         <h1 >
-        <Miasto name={this.state.inputedCity} />
+        <Miasto name={this.state.city} />
         </h1>
         {!!weather ? this.displayWeaterTemp() : null}
         <div>{count}</div>
@@ -82,11 +96,10 @@ class App extends Component {
         <span> wybierz miasto </span>
         <input value={ inputedCity || '' } onChange={(e) => this.onChangeCity(e.target.value)} />
         <br />
-        <div> {this.filteredCity(inputedCity, list)} </div>
-        <button onClick={() => this.zmianaLokacji({inputedCity})}> sukaj:{this.state.inputedCity} </button>
-        
-        <button onClick={() => this.zapytanieOPogode({inputedCity})}> ZAPYTANIE O:{this.state.inputedCity} </button>
-        
+        <div className={cityClass} > {filteredList} </div>
+        {/* <button onClick={() => this.zmianaLokacji(inputedCity)}> sukaj:{this.state.inputedCity} </button>
+        <button onClick={() => this.zapytanieOPogode(inputedCity)}> ZAPYTANIE O:{this.state.inputedCity} </button>
+         */}
       </div>
     );
   }

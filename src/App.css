@@ -2,6 +2,40 @@
   text-align: center;
 }
 
+.city-search-results {
+  background-color: green;
+  transition: background-color .4s ease-in;
+  min-height: 50px;
+  max-height: 300px;
+  overflow-y: auto;
+  min-width: 50px;
+}
+
+.city-search-results.empty{
+  transition: background-color 1s ease-in;
+  background-color: red;
+}
+
+.city-item {
+  opacity: .7;
+  width: 200px;
+  line-height: 25px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3px;
+  background: rgba(13, 212, 186, 0.281);
+  cursor: pointer;
+}
+
+.city-item:hover {
+  opacity: .99;
+  background-color: rgba(250, 107, 202, 0.685);
+  line-height: 28px;
+  box-shadow: 3px 5px rgb(15, 130, 165);
+  transition: all .1s ease-in;
+}
 
 .App-header {
   background-color: #222;
