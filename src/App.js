@@ -23,7 +23,7 @@ class App extends Component {
   }
 
   prepareCities(list) {
-    return map(list, city => ({ id: city.id, name: city.name }));
+    return map(list, city => ({ id: city.id, name: city.name, country: city.country }));
   }
 
   zapytanieOPogode(city){
@@ -49,7 +49,7 @@ class App extends Component {
 
   displayWeaterTemp() {
     const { weather } = this.state;
-    return (<p>Temperatura w {weather.name} to {weather.main.temp} [Celcius]</p>);
+    return (<p>Temperatura w {weather.name} to {weather.main.temp} [Celcius] - {weather.weather["0"].description}</p>);
   }
 
   zmianaLokacji(city) {
@@ -80,6 +80,7 @@ class App extends Component {
 
     const filteredList = this.filteredCity(inputedCity, list);
     const cityClass = cx('city-search-results', { empty: filteredList.length === 0 });
+      
     return (
       <div className="App">
         <header>
