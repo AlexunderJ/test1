@@ -60,12 +60,23 @@ class App extends Component {
     this.setState ({inputedCity});
   }
 
+  otherDataOfCity(cityName) {
+    let selectedCityObj = filter(this.state.list, ['name', cityName] );
+    console.log(map(selectedCityObj, "id"));
+    const selectedID = map(selectedCityObj, "id");
+    const selectedName = map(selectedCityObj, "name");
+    const selectedCountry = map(selectedCityObj, "country");
+
+    return (<p  className='city-data-extend'> Id:{selectedID} <br/> Count: {selectedCountry} </p>)
+  }
+
   cityItemWrapper(cityArray = []) {
     return map(cityArray, city => (
       <div
         className='city-item'
         onClick={() => this.zapytanieOPogode(city)}
       >
+        {this.otherDataOfCity(city)}
         {city}
       </div>
     ));
@@ -101,6 +112,7 @@ class App extends Component {
         {/* <button onClick={() => this.zmianaLokacji(inputedCity)}> sukaj:{this.state.inputedCity} </button>
         <button onClick={() => this.zapytanieOPogode(inputedCity)}> ZAPYTANIE O:{this.state.inputedCity} </button>
          */}
+         
       </div>
     );
   }
